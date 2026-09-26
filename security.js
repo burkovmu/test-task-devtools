@@ -48,6 +48,26 @@
     if (bySize() || bySpeed()) go();
   }
 
+  // хоткеи девтулзов сначала приходят странице: отменяем открытие и сразу уходим,
+  // иначе после F12 можно успеть нажать F8 и остановить скрипт
+  function isDevtoolsKey(e) {
+    var k = (e.key || '').toLowerCase();
+    if (e.keyCode === 123 || k === 'f12') return true;
+    var code = e.code || '';
+    var letter = code === 'KeyI' || code === 'KeyJ' || code === 'KeyC';
+    if (e.ctrlKey && e.shiftKey && letter) return true;
+    if (e.metaKey && e.altKey && (letter || code === 'KeyU')) return true;
+    if ((e.ctrlKey || e.metaKey) && code === 'KeyU') return true;
+    return false;
+  }
+
+  addEventListener('keydown', function (e) {
+    if (!isDevtoolsKey(e)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    go();
+  }, true);
+
   check();
   if (done) return;
   // пристыкованная панель меняет размер окна сразу при открытии
