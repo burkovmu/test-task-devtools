@@ -2,7 +2,7 @@
   'use strict';
 
   var url = 'main.html';
-  var delay = 500;
+  var delay = 50;
   var done = false;
 
   function go() {
@@ -49,5 +49,10 @@
   }
 
   check();
-  if (!done) setInterval(check, delay);
+  if (done) return;
+  // пристыкованная панель меняет размер окна сразу при открытии
+  addEventListener('resize', function () {
+    if (!done && bySize()) go();
+  });
+  setInterval(check, delay);
 })();
